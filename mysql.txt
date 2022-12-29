@@ -1,0 +1,749 @@
+*user가 입력한 내용만 db에 저장된다. 페이지 단위로 저장되지 않는다. 이렇게 user가 입력한 정보만을 저장하는 곳이 database이다.
+*DBMS: DATA BASE MANAGEMENT SYSTEM(OS) - My-SQL, MYSLQ, Oracle, MongoDB, MariaDB.... : DATA가 저장되는 곳(제일 큰 범주)
+*DATABASE: 여러 개의 데이터가 집합되어있는 곳
+*table: 실제로 저장되어있는 곳
+*record: 저장되어있는 정보를 record라고도 한다.
+DBMS > DATABASE > TABLE > RECORD
+#record, recordset, field, column...
+recordset > column > field > record
+
+*excel이 아주 전형적인 database의 형태이다.
+
+<MS ACCESS>
+
+*데이터 형식에서 일련 번호는 변하는 숫자를 의미
+
+*데이터 형식
+char: 고정형 TEXT(STATIC)
+varchar: 유동형 TEXT(FLEXIBLE)
+
+char는 빠르고, varchar는 char에 비해 느리다. 
+그러므로, char는 값의 길이가 무조건 같을 때 사용하고,
+게시판의 이름이나 사용자의 아이디 비밀번호 등에는 글자 수가 변할 수 있으므로 varchar를 사용한다.
+
+EX) char(10): 필드 크기 10 - 무조건 10을 맞춤(공백을 사용해서) / varchar(10): 필드 크기 10 - 10을 맞추지 않고 그대로 사용
+
+!db에서 사용하는 언어 SQL
+
+*
+Apache(web server) > apm
+php(server side language) > apm
+my-sql(dbms)[maria db] > apm
+
+*명령어
+DCL(data control language) - 권한에 관련된 명령어 ex) grant, revoke
+DDL(data definition language) - 공간(table, database...)에 관련된 명령어 ex) create, alter, drop, rename, truncate
+DML(data manipulation language) - 실제 데이터를 조작하는 명령어 ex) select, insert, update, delete
+
+<DDL / DML>
+new: creat / insert
+edit: alter / update
+remove: drop / delete
+search: show / select
+
+**
+dir(폴더) or ls / cd(더블클릭)
+
+** 콘솔 실행 **
+window key + R(실행)
+cmd 입력 후 엔터
+
+** DB 접속 **
+mysql -h 호스트(DB위치) -u 사용자(아이디) -p비밀번호
+mysql -u root
+
+
+** DB 목록 확인 **
+show databases;
+
+
+** DB 선택 **
+use [DB명];
+
+
+** Table 목록 확인 **
+show tables;
+
+
+** 테이블 구조 확인 **
+desc [테이블명];
+
+
+** 사용자 확인 **
+select host, user, password from mysql.user;
+
+
+** 사용자 추가 **
+create user [사용자명(아이디)@호스트명] identified by ['비밀번호'];
+create user tester2@localhost identified by '1234';
+
+
+** 사용자 확인 **
+select host, user, password from mysql.user;
+
+
+** 계정 정보(권한) 확인 **
+show grants for [사용자명@호스트명]
+show grants for tester2@localhost;
+
+
+** mysql 종료 **
+exit; 또는 quit;
+
+
+** tester2로 접속 **
+mysql -u tester2 -p1234;
+
+
+** DB 목록 확인 **
+show databases;
+-- 권한이 없어서 일부 DB만 보여짐
+
+
+** DB 생성 : 권한 확인 **
+create database [DB명];
+create database notice;
+-- 권한이 없어서 DB 생성 안 됨
+
+
+** mysql 종료 **
+exit; 또는 quit;
+
+
+** root로 접속 **
+mysql -u root;
+
+
+** DB 목록 확인 **
+show databases;
+
+
+** 사용자 삭제 **
+drop user [사용자명@호스트명];
+drop user tester2@localhost;
+
+
+** 사용자 확인 **
+select host, user, password from mysql.user;
+
+
+** 데이터베이스 생성 **
+create database [DB명];
+create database front;
+
+
+** 데이터베이스 목록 확인 **
+show databases;
+
+
+** 데이터베이스 삭제 **
+drop database [DB명];
+drop database front;
+
+
+** 데이터베이스 생성 **
+create database [DB명];
+create database front;
+
+** 데이터베이스 생성 : 문자셋 설정 **
+create database front
+default character set utf8
+default  collate utf8_general_ci;
+
+** 데이터베이스 목록 확인 **
+show databases;
+
+
+** 데이터베이스 선택 **
+use [DB명];
+use front;
+
+
+** 테이블 목록 확인 **
+show tables;
+
+
+** 테이블 생성 **
+create table [테이블명] (
+    필드명 데이터타입(길이) 제약,
+    필드명 데이터타입(길이) 제약,
+    필드명 데이터타입(길이) 제약,
+    추가 제약(기본키 설정, 문자셋, 외래키 등)
+);
+create table members(
+    idx int auto_increment primary key,
+    u_name varchar(20) not null,
+    u_id varchar(20) not null,
+    pwd varchar(20) not null
+);
+
+
+** 테이블 구조 확인 **
+desc [테이블명];
+desc members;
+
+
+** 테이블 검색 **
+select * from [테이블명];
+select * from members;
+
+
+** 데이터 입력 **
+insert into [테이블명] values('값1', '값2',,,)
+insert into members values(1, '관리자', 'admin', '1234');
+insert into members(u_name, u_id, pwd) values('홍길동', 'hong', '1111');
+
+ ** alter : 수정 **
+1. 데이터베이스, 테이블 수정(add, change, drop, modify, rename)
+alter table[테이블명] add 필드명 타입 제약 after [필드명];
+
+2. 데이터베이스 수정
+alter database [DB명] CHARACTER SET=문자집합이름;
+alter database [DB명] COLLATE=콜레이션이름;
+
+alter database front character set=utf8;
+alter database front collate=utf8_general_ci;
+
+select * from members; <-- 기존 데이터는 수정되지 않음
+insert into members(u_name, u_id, pwd) values('이영희', 'yhlee', '2222');
+select * from members
+
+query 	obj_type	 	obj_name
+drop 	database		 NAME
+
+3. alter table [테이블명] ADD [필드명 데이터타입];
+   alter table [테이블명] DROP [필드명]   -> 필드 지울 때
+   alter table [테이블명] MODIFY COLUMN [필드명 데이터타입]; -> 필드 수정할 때
+
+	alter table notice add n_date datetime;
+	alter table notice drop n_date;
+	alter table modify column n_content text;
+
+	desc notice;
+
+**과제**
+1. sql 명령어(query) 종류 및 예시문 1개 이상
+-"01_쿼리문_본인이름.hwp"
+2.my-sql 자료형 정리
+-"02_mysql 자료형_본인이름.hwp"
+3.my-sql 제약 종류 정리
+-"03_mysql 제약 종류_본인이름.hwp"
+4."221025_본인이름" 폴더에 파일 모두 포함하여 압축 후 제출
+
+1026과제
+1. 본인 프로젝트에 사용할 DB 테이블 설계서
+2. 각 테이블 쿼리 작성
+
+-테이블 설계서_김영현.hwp
+
+게시판 : board
+
+-------------------------------------------
+항목 | 열이름 | 데이터타입(길이) | 제약
+-------------------------------------------
+글번호 | idx | int | PK, AI
+제목 | title | varchar(100) | NN
+내용 | content | text | NN
+작성자 | author | varchar(20) | NN
+작성일자 | wr_date | date | NN
+조회수 | view_count | int | default 0 
+
+ ** drop : 삭제 **
+ex)
+	drop database [DB명];
+	drop table [테이블명];
+
+	drop table notice;
+	show tables;
+
+	drop database exam;
+	show databases;
+
+
+ **DB에 문자셋 설정하여 생성 **
+	create database [DB명]
+	default character set [문자셋]
+	default collate [콜레이트 이름];
+
+	create database front
+	default character set utf8
+	default collate utf8_general_ci;
+
+ * 테이블 생성 : members *
+	create table members(
+	idx int auto_increment primary key,
+	u_name varchar(20) not null,
+	u_id varchar(20) not null,
+	pwd varchar(20) not null
+);
+
+ * 데이터 입력(한글 데이터 포함)*
+
+ * 제약 *
+	1. not null : 빈 값 허용 안 함
+	2. default : 기본값 적용
+	3. unique : 중복된 값 허용 안 함
+	4. check : 지정된 값만 허용 check[ex) '남', '여' ]
+	5. auto_increment : 자동 증가
+	6. primary key : 기본 키 설정
+	7. foreign key : 참조 키 설정
+
+ * 숫자 타입 * 
+	MySQL은 SQL 표준에서 지원하는 모든 숫자 타입 제공
+	
+	1. 정수 타입 : TINYINT, SMALLINT, MEDIUMINT, INT, BIGINT
+	2. 고정 소수점 타입 : DECIMAL
+	3. 수동 소수점 타입 : FLOAT, DOUBLE
+	4. 비트값 타입 : BIT(0, 1)
+
+ * 문자열 타입 *
+	1. CHAR(길이값) : 고정 길이 문자열 
+	2. VARCHAR(길이값) : 가변 길이 문자열 
+	3. BINARY
+	4. VARBINARY
+	5. BLOB : VARBINARY 업그레이드 버전
+	6. TEXT  : 길이값 없음, 대소문자 구분
+	7. ENUM : 미리 지정한 집합 안의 데이터 중에 하나만 저장
+	8. SET : 미리 지정한 집합 안의 데이터 중에 여러 개 동시에 저장
+
+ * 날짜, 시간 *
+	1. DATE
+ 		- 날자만 저장
+		- 기본 형식 : 'YYYY-MM-DD''
+
+	2. DATETIME 
+		- 날짜 & 시간
+		- 기본 형식 : 'YYYY-MM-DD HH:MM:SS''
+
+	3. DATE, DATEITME
+		- 입력받은 데이터가 유효한 날짜와 시간이 아니면 0을 저장
+
+	4. TIME
+		- 시간 저장
+		- 기본 형식 : 'HH:MM:SS'
+
+	5. YEAR
+		- 연도 저장
+		- YEAR(2
+
+ *** DML 쿼리 ***
+
+게시판 : board
+
+* 테이블 설계 *
+-------------------------------------------
+항목 | 열이름 | 데이터타입(길이) | 제약
+-------------------------------------------
+일련번호		|	idx		|	int			| PK, AI
+이름		|	u_name		|	varchar(20)		| NN
+아이디		|	u_id		|	varchar(20)		| NN
+비밀번호		|	pwd		|	varchar(20)		| NN
+전화번호		|	phone_no	|	varchar(15)		| NN
+이메일		|	email		|	varchar(50)		| NN
+생년월일		|	birth		|	date			| default 0
+성별		|	gender		|	char(1)			| default 0
+주소		|	addr		|	varchar(100)		| default 0
+
+* 테이블 생성 *
+create table new_members(
+	idx int auto_increment primary key,
+	u_name varchar(20) not null,
+	u_id varchar(20) not null,
+	pwd varchar(20) not null,
+	phone_no varchar(15),
+	email varchar(50),
+	birth date,
+	gender char(1),
+	addr varchar(100)
+);
+
+
+ ** insert : 데이터 입력 **
+
+	1. 모든 필드에 데이터 입력
+
+		insert into [테이블명] value('값', '값', ,,,,);
+	
+	 (모든 필드에 값을 입력하는 경우 테이블명 옆에 필드명 생략)
+
+	insert into new_members values(1, '관리자', 'admin', '1234', '01011112222', 'admin@abc.con', '1989-05-23', '남', ' 경기도 시흥시 정왕신길로');
+
+	2. 일부 필드에 데이터 입력
+
+		insert into [테이블명](필드명1, 필드명2, ,,,필드명N) value('값1', '값2', ,,,,'값N');
+
+	( 필드명 개수와 값의 개수가 반드시 일치해야 함)
+	
+	insert into new_members(u_name, u_id, pwd) calues('홍길동', 'hong', '1111');
+
+** 데이터 형식 **
+* 숫자타입 *
+MySQL은 SQL 표준에서 지원하는 모든 숫자 타입 제공
+
+1. 정수 타입 : tinyint, smallint, mediumint, int, bigint
+2. 고정 소수점 타입 : decimal
+3. 부동 소수점 타입 : float, double
+4. 비트값 타입 : bit(0,1)
+
+* 문자열 타입 *
+1. char(길이값) : 고정 길이 문자열
+2. varchar(길이값) : 가변 길이 문자열
+3. binary(길이값)
+4. varbinary(길이값)
+5. blob
+6. text : 길이값 없음, 대소문자 구분
+7. enum : 미리 지정한 집합 안의 데이터 중에 하나만 저장
+8. set : 미리 지정한 집합 안의 데이터 중에 여러 개 동시 저장
+
+* 날짜, 시간 *
+1. date
+-날짜만 저장
+-기본 형식 : 'YYYY-MM-DD'
+
+2. datetime
+-날짜 & 시간
+-기본 형식 : 'YYYY-MM-DD HH:MM:SS'
+
+3. date, datetime
+-입력받은 데이터가 유효한 날짜와 시간이 아니면 0을 저장
+
+4. time
+-시간 저장
+-기본 형식 : 'HH:MM:SS'
+
+5. year
+-연도 저장
+-YEAR(2) : 2자리 연도
+-문자열 '0' 또는 '00' : 2000년
+
+
+----------------------------------------------------------------
+
+**xampp 실행**
+
+**콘솔 실행**
+
+**경로이동**
+
+**db 접속**
+
+**db 목록 확인**
+
+**db 선택**
+use db명;;
+
+
+***squl 기본 쿼리***
+
+**실행문**
+1. DCL : 권한, 보안
+2. DDL : 데이터베이스, 테이블(create / show / alter / drop)
+3. DML : 데이터 처치(insert / select / update / delete)
+
+<DDL / DML>
+new: creat / insert
+edit: alter / update
+remove: drop / delete
+search: show / select
+
+**create : 생성**
+ex) create database [db명]
+create table [table명](
+    필드명 데이터형식 제약
+    필드명 데이터형식 제약
+    필드명 데이터형식 제약
+    필드명 데이터형식 제약
+);
+
+create database exam;
+
+**데이터 검색**
+select * from members;
+
+**alter : 수정**
+1. 데이터베이스, 테이블 수정(add, change, drop, modify, rename)
+alter name [테이블명] add 필드명 타입 제약 after [필드명];
+
+2. 데이터베이스 수정
+alter database [db명] CHARACTER SET = 문자집합이름
+alter database [db명] COLLATE = 문자집합이름
+query obj_type obj_name = 기본 형식
+
+alter database front character set = utf8;
+alter database front collate = utf8_general_ci;
+
+select * from members; <-- 기존 데이터는 수정되지 않음
+insert into members(u_name, u_id, pwd) value('이영희','yhlee','2222');
+select * from members;
+
+문자셋을 중간에 수정했다고 해서 table이 정상으로 바뀌리라는 보장은 없다. 그러므로 처음에 만들 때부터 잘 만들어놓아야 한다.
+
+3. alter table [table명] add [필드명 데이터타입];~~
+    alter table [table명] drop [필드명];~~
+    alter table [table명] modify column [필드명 데이터타입];~~
+
+    alter table notice add n_date datetime;
+    alter table notice drop n_date;
+    alter table notice modify column n_content text;
+
+    desc notice;
+
+    cf)erd, 테이블 설계서...
+
+**drop : 삭제**
+ex) drop database [db명];
+    drop table [테이블명];
+
+    drop table notice;
+    show tables;
+
+    drop database exam;
+    show databases;
+
+**db에 문자셋 설정하여 생성**
+create database [db명]
+default character set [문자셋]
+default collate [콜레이트 이름];
+
+** select : 데이터 검색 **
+1. 단일 필드 검색
+select [필드명] from [테이블명];
+select u_name from new_members;
+
+2. 여러 필드 검색
+select [필드명],[필드명],[필드명],[필드명],,,,,,from [테이블명];
+select u_name from new_members;
+
+3. 모든 필드 검색
+select *(all) from [테이블명];
+select * from new_members;
+
+4. 전체 행의 개수 출력
+-auto_increment는 자동 갱신되지 않으므로 중간값이 빠져도 값이 그대로이다.
+
+select count(*) from [테이블명];
+
+5. 중복값 제외 검색
+select distinct [필드명] from [테이블명];
+select distinct gender from new_members;
+ 
+6. 필드명 변경 : 출력 시에만 변경
+select [필드명] as [보여질 필드명] from [테이블명]
+
+** where : 조건절 **
+1. 특정 필드에서 특정한 값을 가진 전체 데이터 검색
+ select * from [테이블명] where [필드명=값];
+ select * from new_members where idx=22;
+
+ 2. 특정 필드에서 특정한 값을 가진 일부 데이터 검색
+ select [필드명],[필드명]... from [table명] where [필드명=값];
+ select u_id, idx from new_members where idx=19;
+
+ 3. 수정 삭제 시에도 사용
+
+
+**연산자**
+
+1. + , - , * , /
+2. && , ||
+3. not
+4. = , != , > , < , =< , =>
+5. in : 비연속 데이터 검색 / 입력된 값들만 선택
+select [필드명] from [테이블명] where [필드명] in(값,값,값,...);
+
+6. between A and B : 범위 검색
+select [필드명] from [테이블명] where [필드명] between A and B;
+select * from new_members where idx between 10 and 20;
+select * from new_members where birth between '1990-01-01' and '1995-12-31';
+
+7. like, %(all) : 문자열 검색
+select [필드명] from [테이블명] where [필드명] like '%문자열%';
+select [필드명] from [테이블명] where [필드명] like '문자열%';
+select [필드명] from [테이블명] where [필드명] like '%문자열';
+select [필드명] from [테이블명] where [필드명] like '문자열';
+select [필드명] from [테이블명] where [필드명] not like '문자열';
+select * from new_members where addr like '서울';
+
+**order by : 정렬**
+1. asc : 오름차순(기본값)
+2. desc : 내림차순
+
+select [필드명] from [테이블명] order by [필드명 정렬방법]
+select [필드명] from [테이블명] order by [필드명 정렬방법], [필드명 정렬방법]
+select [필드명] from [테이블명] where절 order by [필드명 정렬방법]
+select * from new_members where idx between 10 and 20 order by idx desc;
+
+
+**update : 데이터 수정**
+1. 단일 필드 수정
+update [테이블명] set [수정할 필드=수정할 값];
+update new_members set addr='서울';
+
+2. 여러 필드 수정
+update [테이블명] set [수정할 필드=수정할 값],[수정할 필드=수정할 값]....;
+update new_members set u_id='hong',pwd='1234';
+
+3. 특정 데이터 수정
+update [테이블명] set [수정할 필드 = 수정할 값] where [필드명 = 값];
+update new_members set addr='경기' where idx=22;
+
+
+**delete : 데이터 삭제**
+1. 모든 행 삭제
+delete from [테이블명];
+delete from new_members;
+
+2. 특정 행 삭제
+delete from [테이블명] where [필드명=값];
+delete from new_members where idx=22;
+
+ ** 사용자 확인 **
+select host, user, password from mysql.user;
+
+ ** 사용자 추가 **
+ create user [사용자명@호스트] identified by [비밀번호];
+ create user tester@localhost identified by '1111';
+
+ ** 계정 정보 확인 **
+ show grants for [사용자명@호스트];
+ show grants for tester@localhost;
+
+ ** DB 종료 **
+ exit; 또는 quti;
+
+ ** 새 사용자 로그인 **
+ mysql -u [사용자명] -p[비밀번호]
+ mysql -u tester -p1111
+
+ ** DB 목록 확인 **
+ show databases;
+ -- 권한이 없으므로 일부 DB만 보여짐
+
+ ** DB 생성 **
+ create database [DB명];
+ create database exam;
+ -- 권한이 없으므로 DB 생성 안됨
+
+ ** DB 선택 **
+ use [DB명];
+ use front;
+
+ ** DB명 : test **
+ 모든 권한이 부여된 DB
+
+ ** 테이블 생성 **
+ create table ex_table(
+	idx int,
+	u_name varchar(10),
+	pwd varchar(20)
+ );
+
+ insert into members values(1, '영희', 'yhlee', '2222');
+ 
+ update ex_table set u_name='이영희' where idx=1;
+
+ update members set u_name='김철수' where idx=2;
+
+ delete from members where idx=2;
+
+ -- 권한이 없으므로 Table 생성, 데이터 입력, 수정, 삭제 안됨
+
+ ** 권한 부여 **
+ grant [권한 종류] on [DB명.테이블명] to [사용자명@호스트] with grant option;
+
+ ex) tester에게 front DB에 있는 members 테이블에 insert 권한 부여
+ grant insert on front.members to tester@localhost with grant option;
+
+ ex) tester에게 모든 DB에 모든 권한 부여
+ grant all on *.* to tester@localhost with grant option;
+
+ ** 권한 회수 **
+ revoke [권한 종류] on [DB명.테이블명] from [사용자명@호스트];
+
+ ex) tester의 모든 권한 회수
+ revoke all on *.* from tester@localhost;
+
+ * DB 종료 *
+ exit;
+
+ * root 로그인 *
+ mysql -u root -p1111
+
+ * 사용자 확인 *
+  select host, user, password from mysql.user;
+  
+  * 사용자 삭제 *
+  drop user tester@localhost;
+
+ * 권한 삭제 *
+ 
+ * DB 종료 *
+
+ * tester 로그인 *
+ 
+ * DB 목록 확인 *
+ show databases;
+
+ ** 데이터 준비 **
+ * new_members 테이블 삭제
+ * new_members 생성
+ * 데이터 입력
+
+ ** 트랜잭션 : 복원 시점 만들기 **
+ 1. start transaction : 트랜잭션 시작
+ 2. savepoint [이름] : 복원 시점 저장
+ 3. rollback to [이름] : 해당 시점으로 복원
+    rollback : 트랜잭션 시작 시점으로 복원
+	
+ * 현재 상태를 복원 시점으로 저장 *
+ start transaction:
+ savepoint a; -- 모든 데이터가 존재
+
+ * 모든 성별을 '남' 또는 '여'로 변경
+ update new_members set gender='남';
+
+ * 모든 성별을 '남' 또는 '여'로 변경된 시점을 b라는 이름으로 저장 *
+ savepoint b;
+
+ * idx 1 ~ 10 삭제 *
+ delete from new_members where idx between 1 and 10;
+ select * from new_members;
+
+ * idx 1 ~ 10  삭제된 시점을 C라는 이름으로 저장 *
+ savepoint c;
+
+ * 전체 데이터 삭제 *
+ delete from new_members;
+ select * from new_members;
+
+ * idx 1 ~ 10 삭제된 시점으로 복구 *
+ rollback to c;
+ select * from new_members;
+ 
+ * idx 1 ~ 10 삭제되기 이전 시점으로 복구 *
+ rollback to b;
+ select * from new_members;
+
+ * 원래 데이터로 복구 *
+ rollback to a;
+ select * from new_members;
+
+ http://localhost/phpmyadmin
+
+ https://dev.mysql.com/downloads/mysql/
+
+	    server		DBMS		  SSL
+	 (web server)		    (Server Side Language)
+
+	window server     MS-SQL		  asp
+
+	     Linux		My-SQL		  php
+	(apache, tomcat...)
+
+	     Unix		Oracle		  jsp
+
+
+http://dudgus257.dothome.co.kr/phpinfo.php
+
+c드라이브 -> xampp -> htdocs (http documents) -> http://localhost/phpinfo.php
+

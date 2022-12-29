@@ -1,0 +1,237 @@
+개요
+버전 관리 시스템(VCS : Version Control System)
+
+SVN(Subversion)
+중앙집중식
+기능이 완성된 형태로 COMMIT
+
+Git
+분산형 버전 관리
+개발자 별 Commit History
+개발자 Repository(저장소)와 서버 Repository
+
+특징
+대부분의 명령을 로컬에서 실행
+원격 저장소의 정보가 필요할 때만 연결(pull, push)
+오프라인 환경에서도 commit
+
+일반파일관리 vs 소스코드관리
+
+일반 파일 관리
+그 사이에 뭐가 바뀌었는지 차이를 알 수 없다
+복붙할수록 용량증가
+
+소스 코드 관리
+History 관리가능
+차이가 무엇이고 수정이유를 log로 남길 수 있다.
+타임머신 가능
+현재파일들은 안전한 상태로 과거상태 그대로 복원가능(반대도 가능)
+(각 버전별 차이만 저장해서 size감소)
+
+설치 다운로드
+http://git-scm.com
+
+사용자 정보 설정
+사용자 구분을 위한 Git 설정
+--global 옵션으로 모든 프로젝트에 설정 적용
+
+콘솔 실행
+Git > Git CMD 또는 Git Bash
+
+사용자 설정
+git config --global user.name "사용자이름"
+git config --global user.email "메일주소"
+
+설정 확인
+git config --list
+git config user.name
+
+저장소 생성
+로컬 저장소로 저장할 폴더 생성
+사용할 폴더 이동(cd 디렉토리 경로)
+새로운 저장소 생성
+git init
+해당 폴더에 .git 폴더 생성 확인
+
+.git
+프로젝트 관리를 위한 파일
+해당 프로젝트에만 적용할 config 파일 등
+
+Git 버전 확인 : git --version
+
+사용할 폴더 생성 및 숨긴 파일 보기 설정
+
+디렉토리 이동
+목록 확인 : dir  또는 ls
+경로 이동 : cd 디렉토리명
+
+저장소 생성 : git init
+
+상태 확인 
+git status
+
+on branch master
+master 라는 기본 가지(branch) 사용
+
+No commits yet
+commit 한 내역 없음
+
+주요 명령
+add
+커밋할 목록에 추가
+
+commit
+커밋 (히스토리의 한 단위) 만들기
+
+push
+현재까지의 내용을 Github에 전달
+
+download : pull
+
+upload : push
+
+**local repository**
+----------------------------------------------------------------------------------------------------
+Working		add 		index		commit		   Head
+Directory  	->		(Stage)		   ->		-Repository
+(내가 작업하는공간)					   (내 정보를 같이 기억해주는 공간)
+
+Working directory : 작업 폴더 (내가 만든 폴더)
+Index(Stage) : 준비 영역 (임시저장소)
+Head Repository : 저장소
+----------------------------------------------------------------------------------------------------
+
+추가(Untracked files) 또는 변경(Modified files)하고자 하는 파일을 인덱스에 기록(stage)후 Staging 된 목록만 저장소에 commit
+
+실습2
+사용할 폴더에 "text.txt" 파일 생성
+파일 목록 확인 : "ls" 또는 "dir"
+상태 확인(수시 확인) : git status
+파일을 인덱스에 스테이지 : git add [파일명]
+전체 파일 스테이지 : git add . ( 띄어쓰기 후 . )
+상태 확인 (수시 확인) : git status
+"Changes to be committed:"에서 staged 파일 확인
+확정 : git commit -m [설명]
+git commit -a : add와 commit을 동시에 진행
+git log : history 확인
+
+
+
+add 취소
+선택한 파일 : git reset HEAD [파일명]
+전체 파일 : git reset HEAD
+
+git restore --staged
+git reset HEAD
+
+저장소 생성
+Github 회원가입
+https://github.com/join
+
+ID : dudgus257@naver.com 
+pw : kyh53~~@
+
+내 원격 저장소 : https://github.com/dudgus257/siheung.git
+
+
+Local	      push(upload)	   Rmote
+Respository   ------------->	Respository	
+	     <-------------
+                 pull(download)
+
+원격 서버 주소 설정
+git remote add origin [원격 서버 주소] (변수)
+origin : remote repository(원격 저장소) 이름, 다른 이름도 무관
+원격서버주소 : github에서 확인
+
+
+저장소 등록
+git remote add origin https://github.com/dudgus257/siheung.git
+
+원격저장소 확인 
+git remote - v
+
+원격저장소 이름 변경
+git remote rename [기본이름] [새로운이름]
+원격저장소의 브랜치 이름도 변경됨
+
+원격저장소 삭제
+git remote rm [저장소이름]
+git remote rm [origin]
+
+branch(나뭇가지) = who / this  
+master = localhost
+
+push
+ - 로컬 저장소 변경 내용을 원격 서버로 보내기
+ - git push [원격저장소이름] [push할 가지 이름]
+ - git push origin master
+전송되지 않을 때 강제 전송
+ - git push origin master -f
+
+pull
+ - 로컬 저장소를 원격 저장소에 맞춰 갱신
+ - git pull 
+ - 원격 저장소의 변경 내용이 로컬 작업 디렉토리에 받아지고(fetch), 병합(merge)
+ => ex) git pull origin master
+
+git add . -> git commit -m "" -> git push origin master
+
+
+*****git GUI*****
+
+파일 수정 후 Rescan -> "Unstaged Changes(스테이지 되지 않은 상태에서 수정됨.)"
+
+파일 선택 후 Stage Changed
+다시 선택하면 Unstaged
+
+Rescan = git status (현재 상태 확인)
+
+Stage Changed = git add .
+
+-----------------------------------------------------------------------
+
+------vscode로 git 사용하기-------
+
+vs code -> Ctrl+Shift+G
+
+Sync Changes => push
+
+1. 프로젝트에 사용할 폴더 선택하기
+2. cs code 에서 폴더 지정
+
+3. 왼쪽 아이콘에서 "소스제어" 클릭
+
+저장소 생성 확인
+
+1. 텍스트 파일 생성 후 저장
+2. 내용작성
+
+소스 제어에 숫자 확인
+
+메시지에 v1 입력
+커밋 클릭
+
+터미널 - 새 터미널 열기
+
+터미널에
+git log --oneline --all --graph 
+입력
+
+Git log : 로그 확인
+
+-- oneline : 한줄 보기
+-- all : 모든 브랜치 확인
+-- graph : 그래프 형태로 확인
+
+Git Graph 설치
+
+Git Graph : 누가 했는지 확인할수있음.
+
+지역 저장소에 주소 저장
+상단 점 세개 버튼클릭
+원격 - 원격 추가(add remote)
+
+깃허브 주소(https://github.com/dudgus257/siheung.git) 쓰고 이름(origin) 쓴 후 엔터하면 등록 완료
+
+강제 pull = git pull origin master --allow-unrelated-histories
